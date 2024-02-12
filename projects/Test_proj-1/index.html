@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="src/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .tab {
+            cursor: pointer;
+            color: #03cafc;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px 5px 0 0;
+            background-color: #f1f1f1;
+        }
+        .tab-content {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 0 0 5px 5px;
+            width: 96vw;
+            height: 80vh;
+            overflow: auto;
+        }
+        .right_side{
+            text-align: left;
+        }
+        .active {
+            background-color: #ddd;
+            border-bottom: none;
+        }
+        .active-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class='Identification_log'>
+    <div class="Login">
+        <form class='login_form'>
+            <h3>Candidate name</h3>
+            <input id='candidate_id' type="text" name="candidate_id" value='' placeholder="Matricule">
+            <input id='candidate_name' type="text" name="candidate_name" value='' placeholder="Name">
+            <input id='Slogin' type="button" value="Send">
+        </form>
+    </div>
+    <div class="Upload_file">
+        <div class="instruction">
+            <p> Hi <span id='nm'> </span>,</p>
+            <h3>Instruction: </h3>
+            <div class="Admin" style="display:none;">
+                <p>Import any annotation in JSON format</p>
+            </div>
+            <div class="Members" style="display:none;">
+                <p>Import the TEST DATA in JSON format and enjoy your task!</p>
+            </div>
+        </div>
+        <label for="jsonFileInput">Import Data</label><input type="file" id="jsonFileInput" accept=".json">
+    </div>
+</div>
+<div class="devview"></div>
+<div class='Submition'> 
+    <div><label><input type="checkbox" name="flag_review"> Flag for review</label></div>
+    <div><button id="Submit_hit" class="active" disabled>Submit</button><button id="reftresh">Refresh</button></div>
+</div>
+<div class="navigation" style="display:none;">
+    <div><button class="bt_nav" id="Prev_hit">Previous</button></div>
+    <div><button class="bt_nav" id="Next_hit">Next</button></div>
+</div>
+<div class="tab-container">
+    <div class="tab" id="s_tab1" onclick="openTab('tab1')">Step 1</div>
+    <div class="tab" id="s_tab2" onclick="openTab('tab2')">Step 2</div>
+</div>
+<div class='info'></div>
+<div id="tab1" class="tab-content">
+    <div class="left_side">
+        <div class="title">Select</div>
+        <div class="option_images"></div>
+    </div>
+    <div class="right_side">
+        <div class="image_defects_container">
+            <div class="title">Image defects</div>
+            <div class="invalid_images_selections">
+                <label><input class="image_not_loaded_or_valid" name="image_not_loaded" type="checkbox" value="image_not_loaded">Images did not load</label>
+                <label><input class="image_not_loaded_or_valid" name="no_image_reason" type="checkbox" value="cut_off_or_occluded_by other_things">Cut off or occluded by other things</label>
+                <label><input class="image_not_loaded_or_valid" name="no_image_reason" type="checkbox" value="Circular_Curved">Curved or circular item</label>
+                <label><input class="image_not_loaded_or_valid" name="no_image_reason" type="checkbox" value="Obscured">Obscured item</label>
+                <label><input class="image_not_loaded_or_valid" name="no_image_reason" type="checkbox" value="Not_A_Valid_Item">Not a valid item</label>
+                <label><input class="image_not_loaded_or_valid" name="no_image_reason" type="checkbox" value="bundled_wall_art">Bundled Wall Art</label>
+                <label><input class="image_not_loaded_or_valid" name="no_image_reason" type="checkbox" value="transparent_item">Transparent Item</label>
+                <!--label><input class="image_not_loaded_or_valid" name="no_image_reason" type="checkbox" value="angled_frontal_image">Frontal image is angled</label-->
+            </div>
+            <div class="title">ASIN Link</div>
+            <div class="asin_link" id="asin_link_1">
+                <a href='' target="_new"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tab2" class="tab-content">
+    <div class='header_T2'>
+        <h3>Draw a contour around each item</h3>
+        <h5>If the image did not load or the object is at an angle; select the appropriate box and submit</h5>
+    </div>
+    <div class="content_second_tab">
+        <div class="left_side_tab_two">
+            <div class="not-loaded-div"><label for="not_loaded"><input id="not_loaded" style="margin-right:10px" type="checkbox" value="no_body">No Image To Annotate (Click submit)</label></div>
+            <div class="app">
+                <canvas class='imgShow' width='0' height='0'></canvas>
+                <canvas class='draw' width='0' height='0'></canvas>
+                <canvas class='position' width='0' height='0'></canvas>
+            </div>
+            <div class="buttons_canvas">
+                <div class="btn btn-outline-primary" id="restoreContext" onclick="restoreContext()">Default view</div>
+                <div class="btn btn-outline-secondary" id="hidePoints">Show points</div>
+                <div class="btn btn-outline-secondary" id="pencil">Create contour</div>
+                <div class="btn btn-outline-secondary" id="assignLabel">Save box</div>
+                <div class="btn btn-outline-secondary" id="deleteContour">Delete box</div>
+            </div>
+        </div>
+        <div class="right_side_tab_two">
+            <div id="questions">
+                <div class="q_one">
+                    1. ASIN link:<br>
+                    <div class="asin_link" id="asin_link_2"><a href="https://www.amazon.ca/dp/B0CG3CFVZB" target="_new">-*-*-*-*-</a></div>
+                    <p>2. Did the ASIN page load?</p>
+                    <label><input class="q_content" id="ASINLoadYes" type="radio" name="ASINLoad" value="YesLoad">Yes, the ASIN page loaded</label><br>
+                    <label><input class="q_content" id="ASINLoadNo" type="radio" name="ASINLoad" value="DidNotLoad">No, the ASIN page did not load</label>
+                </div><br>
+                <div class="q_two">
+                    <p>
+                        3. Fill in the size of the item<br>
+                        If you are unsure or it is unavailable leave the box blank:
+                    </p>
+                    <div>
+                        <div class='itemsize'>
+                            <label>Canvas width:</label><input class="q_content" id="Width" name="Width" type="text" value>
+                        </div><br>
+                        <div class='itemsize'>
+                            <label>Canvas height:</label><input class="q_content" id="Height" name="Height" type="text" value>
+                        </div>
+                    </div><br>
+                    <div>
+                        <p>4. What measurement system is used for the canvas size?</p>
+                        <form class='Mesurment_S'>
+                            <label><input class="q_content" id="input_feet" type="radio" name="correctMetric" value="Feet"> Feet</label><br>
+                            <label><input class="q_content" id="input_inches" type="radio" name="correctMetric" value="Inches"> Inches</label><br>
+                            <label><input class="q_content" id="input_meters" type="radio" name="correctMetric" value="Meters"> Meters</label><br>
+                            <label><input class="q_content" id="input_centimeters" type="radio" name="correctMetric" value="Centimeters"> Centimeters</label><br>
+                            <label><input class="q_content" id="input_unsure" type="radio" name="correctMetric" value="Unsure"> Unsure / Not Listed</label><br>
+                        </form>
+                    </div><br>
+                    <div>
+                        <p>5. What is the ASIN thickness?</p>
+                        <form class='thickness_Asin'>
+                            <label><input class="q_content" type="radio" name="isLengthLessThanPoint2" value="yes"> Less than 0.2 inches</label><br>
+                            <label><input class="q_content" type="radio" name="isLengthLessThanPoint2" value="no"> Equal to or greater than 0.2 inches</label><br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function openTab(tabName) {
+        var i, tabContent, tabLinks;
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
+        }
+        tabLinks = document.getElementsByClassName("tab");
+        for (i = 0; i < tabLinks.length; i++) {
+            tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+            if (tabLinks[i].id==('s_'+tabName)) {
+                tabLinks[i].className += " active";
+            } else {}
+        }
+        document.getElementById(tabName).style.display = "flex";
+        //event.currentTarget.className += " active";
+        //document.getElementById(tabName).className += " active";
+    }
+    function reset_image_defect(){
+        var invalidImagesDiv = document.querySelector('.invalid_images_selections');
+        var inputElements = invalidImagesDiv.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+        inputElements.forEach(function(input) {
+            input.checked = false;
+        });
+    }
+</script>
+</body>
+<script type="text/javascript" src="src/indata.js"></script>
+<script type="text/javascript" src="src/script.js"></script>
+<script type="text/javascript" src="src/polygon.js"></script>
+</html>

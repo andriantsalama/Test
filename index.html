@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests & Training</title>
+    <link rel="stylesheet" type="text/css" href="src/style.css">
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVMIo0EiIFTUD2Ic2ZBD_A6OdmG1BKD1U",
+            authDomain: "tls-test-pages.firebaseapp.com",
+            databaseURL: "https://tls-test-pages-default-rtdb.firebaseio.com",
+            projectId: "tls-test-pages",
+            storageBucket: "tls-test-pages.appspot.com",
+            messagingSenderId: "363991796304",
+            appId: "1:363991796304:web:9ae3c3eefe50dd2bdc9f55",
+            measurementId: "G-JF18WNT7TP"
+        };
+    </script>
+</head>
+<body>
+    <div class="identification">
+        <div class="inout_tab">
+            <label class="sin active" onclick='activateTab(0)'>Sign in</label>
+            <label class="sin" onclick='activateTab(1)'>Sign up</label>
+        </div>
+        <div class="s_form">
+            <input type="text" name="ID" placeholder="Matricule">
+            <input type="button" name="Send_log" class="Send_log" value="Send">
+        </div>
+        <div class="s_form" style="display: none;">
+            <input type="text" name="ID" placeholder="Matricule" required>
+            <input type="text" name="NAME" placeholder="Name" required>
+            <input type="text" name="ALIAS" placeholder="Alias / called name" required>
+            <select class='form-control' required>
+                <option disabled selected>Gender</option >
+                <option value="male">Male</option>
+                <option value="femal">Female</option>
+            </select>
+            <input type="button" name="Send_log" class="Send_log" value="Send">
+        </div>
+    </div>
+    <div class="profile_user">
+        <div class="show_profile" style="display:flex;width: 98vw;">
+            <div class="photo_show">
+                <img src="src/avatar.png">
+            </div>
+            <div class="detail_show">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><label>Matricule: </label></td>
+                            <td><span class="pr_detail id"></span></td>
+                        </tr><tr>
+                            <td><label>Name: </label></td>
+                            <td><span class="pr_detail name"></span></td>
+                        </tr><tr>
+                            <td><label>Alias: </label></td>
+                            <td><span class="pr_detail alias"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--div></div>
+                <div></div>
+                <div></div-->
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <h1>Hello<span id="Greet_username"></span>,</h1>
+        <p>Welcome to my Test and Training Plateform. Choose a task below</p>
+        <div class="list-p"><ul>
+            <li><div class="task" id="P1" onclick="opentest(this.id)">Test_proj-1</div></li>
+            <li><div class="task" id="P2" onclick="opentest(this.id)">Test_proj-2</div></li>
+        </ul></div>
+    </div>
+    <header>
+        <logo>Niry N</logo>
+        <nav>
+            <ul>
+                <li class="nav_menu" onclick='activateMenu(0)'>Home</li>
+                <li class="nav_menu" onclick='activateMenu(1)'>Profile</li>
+                <li class="nav_menu active" onclick='activateMenu(2)'>Identification</li>
+            </ul>
+        </nav>
+    </header>
+    <footer>
+        <div class="copy">&copy; A. Niry &#169;</div>
+    </footer>
+    <script>
+        function ouvrirLien(url) {
+            //window.open(url, '_blank');
+            window.location.href = url;
+        }
+        function opentest(idtest){
+            var url = 'projects/'+document.querySelector('#'+idtest).innerHTML + '/index.html'
+            ouvrirLien(url);
+        }
+        document.addEventListener('contextmenu', (e)=>{e.preventDefault();});
+        document.addEventListener('keydown', function(e) {
+            //e.preventDefault();
+            console.log('Code de la touche :', e.keyCode,'\nTouche pressée: "'+e.key+'"');
+        });
+    </script>
+    <script src="src/js.js"></script>
+</body>
+</html>
